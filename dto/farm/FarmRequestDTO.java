@@ -1,11 +1,6 @@
 package ma.hariti.asmaa.wrm.citrontrack.dto.farm;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -15,8 +10,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class FarmDTO {
-    private Long id;
+public class FarmRequestDTO {
+
     @NotBlank(message = "Name is required")
     private String name;
 
@@ -30,4 +25,3 @@ public class FarmDTO {
     @PastOrPresent(message = "Creation date must be in the past or present")
     private LocalDate creationDate;
 }
-
