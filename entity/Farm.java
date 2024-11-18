@@ -30,7 +30,7 @@ public class Farm {
     @NotNull(message = "Total area is required")
     @DecimalMin(value = "0.1", message = "Minimum area is 0.1 hectare")
     @Column
-    private double totalArea; //in hectars
+    private double totalArea;
 
     @PastOrPresent(message = "Creation date must be in the past or present")
     private LocalDate creationDate;
