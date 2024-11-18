@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
+import ma.hariti.asmaa.wrm.citrontrack.embeddedable.HarvestDetailId;
+import ma.hariti.asmaa.wrm.citrontrack.util.BaseEntity;
+
 @Entity
 @Table(name = "harvest_details")
 @Getter
@@ -11,11 +14,9 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class HarvestDetail {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class HarvestDetail extends BaseEntity {
+    @EmbeddedId
+    private HarvestDetailId id;
 
     @NotNull(message = "Quantity cannot be null")
     @Positive(message = "Quantity must be greater than 0")
