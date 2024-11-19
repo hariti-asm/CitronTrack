@@ -5,7 +5,6 @@ import ma.hariti.asmaa.wrm.citrontrack.dto.harvest.HarvestDTO;
 import ma.hariti.asmaa.wrm.citrontrack.entity.Harvest;
 import ma.hariti.asmaa.wrm.citrontrack.mapper.HarvestMapper;
 import ma.hariti.asmaa.wrm.citrontrack.repository.HarvestRepository;
-import ma.hariti.asmaa.wrm.citrontrack.service.HarvestService;
 import ma.hariti.asmaa.wrm.citrontrack.util.GenericDtoServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
