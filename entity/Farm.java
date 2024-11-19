@@ -18,7 +18,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "Farms")
-public class Farm  extends BaseEntity<Long> {
+public class Farm  extends BaseEntity {
 
     @NotBlank(message = "name is required")
     private String name;

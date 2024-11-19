@@ -4,6 +4,7 @@ package ma.hariti.asmaa.wrm.citrontrack.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
+import ma.hariti.asmaa.wrm.citrontrack.util.BaseEntity;
 import org.springframework.lang.NonNull;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import lombok.*;
 @Setter
 @Entity
 @Table(name = "Fields")
-public class Field {
+public class Field extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

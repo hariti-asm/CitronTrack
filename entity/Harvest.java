@@ -18,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @Entity
 @Table(name = "Harvests")
-public class Harvest extends BaseEntity<Long> {
+public class Harvest extends BaseEntity{
     @NotNull(message = "Harvest date cannot be null")
     @PastOrPresent(message = "Harvest date must be in the past or present")
     private LocalDate harvestDate;
