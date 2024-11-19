@@ -113,5 +113,13 @@ public class HarvestController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/count")
+    @Operation(summary = "Get harvest count", description = "Returns the total number of harvests")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved count")
+    public ResponseEntity<Long> getHarvestCount() {
+        log.debug("REST request to count Harvests");
+        return ResponseEntity.ok(harvestService.count());
+    }
+
 
 }
