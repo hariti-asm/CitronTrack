@@ -92,5 +92,16 @@ public class HarvestController {
         return ResponseEntity.ok(harvests);
     }
 
+    @GetMapping("/{id}")
+    @Operation(summary = "Get a harvest by ID", description = "Returns a harvest by its ID")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved the harvest")
+    @ApiResponse(responseCode = "404", description = "Harvest not found")
+    public ResponseEntity<HarvestDTO> getHarvest(@PathVariable Long id) {
+        log.debug("REST request to get Harvest : {}", id);
+        return harvestService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
 
 }
