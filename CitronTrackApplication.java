@@ -8,6 +8,7 @@ public class CitronTrackApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(CitronTrackApplication.class, args);
+        System.out.println("Hello World!");
     }
 
 }
