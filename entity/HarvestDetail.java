@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
 import ma.hariti.asmaa.wrm.citrontrack.embeddedable.HarvestDetailId;
-import ma.hariti.asmaa.wrm.citrontrack.util.BaseEntity;
+
 @Entity
 @Table(name = "harvest_details")
 @Getter
@@ -13,7 +13,8 @@ import ma.hariti.asmaa.wrm.citrontrack.util.BaseEntity;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class HarvestDetail extends BaseEntity {
+public class HarvestDetail {
+
     @EmbeddedId
     private HarvestDetailId id;
 

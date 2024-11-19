@@ -1,6 +1,5 @@
 package ma.hariti.asmaa.wrm.citrontrack.entity;
 
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
@@ -19,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @Entity
 @Table(name = "Harvests")
-public class Harvest extends BaseEntity {
+public class Harvest extends BaseEntity<Long> {
     @NotNull(message = "Harvest date cannot be null")
     @PastOrPresent(message = "Harvest date must be in the past or present")
     private LocalDate harvestDate;

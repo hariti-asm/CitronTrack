@@ -4,20 +4,21 @@ package ma.hariti.asmaa.wrm.citrontrack.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import ma.hariti.asmaa.wrm.citrontrack.util.BaseEntity;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Entity
 @Table(name = "Farms")
-public class Farm  extends BaseEntity {
+public class Farm  extends BaseEntity<Long> {
 
     @NotBlank(message = "name is required")
     private String name;
