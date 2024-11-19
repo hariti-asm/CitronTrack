@@ -103,5 +103,15 @@ public class HarvestController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete a harvest", description = "Deletes a harvest by ID")
+    @ApiResponse(responseCode = "204", description = "Harvest deleted successfully")
+    @ApiResponse(responseCode = "404", description = "Harvest not found")
+    public ResponseEntity<Void> deleteHarvest(@PathVariable Long id) {
+        log.debug("REST request to delete Harvest : {}", id);
+        harvestService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
 
 }
