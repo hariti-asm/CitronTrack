@@ -72,5 +72,16 @@ public class HarvestController {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping
+    @Operation(summary = "Get all harvests", description = "Returns a page of harvests")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved harvests")
+    public ResponseEntity<Page<HarvestDTO>> getAllHarvests(
+            @Parameter(description = "Pagination information")
+            Pageable pageable) {
+        log.debug("REST request to get a page of Harvests");
+        Page<HarvestDTO> page = harvestService.findAll(pageable);
+        return ResponseEntity.ok(page);
+    }
+
 
 }
