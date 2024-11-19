@@ -54,5 +54,23 @@ public class HarvestController {
         return ResponseEntity.created(location).body(result);
     }
 
+    @PutMapping("/{id}")
+    @Operation(summary = "Update a harvest", description = "Updates an existing harvest by ID")
+    @ApiResponse(responseCode = "200", description = "Harvest updated successfully")
+    public ResponseEntity<HarvestDTO> updateHarvest(
+            @PathVariable Long id,
+            @Valid @RequestBody HarvestRequestDTO requestDTO) {
+        log.debug("REST request to update Harvest : {}, {}", id, requestDTO);
+
+        HarvestDTO harvestDTO = HarvestDTO.builder()
+                .id(id)
+                .harvestDate(requestDTO.getHarvestDate())
+                .season(requestDTO.getSeason())
+                .build();
+
+        HarvestDTO result = harvestService.update(id, harvestDTO);
+        return ResponseEntity.ok(result);
+    }
+
 
 }
