@@ -83,5 +83,14 @@ public class HarvestController {
         return ResponseEntity.ok(page);
     }
 
+    @GetMapping("/list")
+    @Operation(summary = "Get all harvests as list", description = "Returns all harvests as a list")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved harvests list")
+    public ResponseEntity<List<HarvestDTO>> getAllHarvestsList() {
+        log.debug("REST request to get all Harvests as list");
+        List<HarvestDTO> harvests = harvestService.findAll();
+        return ResponseEntity.ok(harvests);
+    }
+
 
 }
