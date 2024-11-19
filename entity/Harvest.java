@@ -10,8 +10,9 @@ import ma.hariti.asmaa.wrm.citrontrack.util.BaseEntity;
 
 import java.time.LocalDate;
 import java.util.List;
+import lombok.experimental.SuperBuilder;
 
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -19,11 +20,6 @@ import java.util.List;
 @Entity
 @Table(name = "Harvests")
 public class Harvest extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-
     @NotNull(message = "Harvest date cannot be null")
     @PastOrPresent(message = "Harvest date must be in the past or present")
     private LocalDate harvestDate;

@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import ma.hariti.asmaa.wrm.citrontrack.dto.harvest.HarvestDTO;
 import ma.hariti.asmaa.wrm.citrontrack.dto.harvest.HarvestRequestDTO;
 import ma.hariti.asmaa.wrm.citrontrack.mapper.HarvestMapper;
-import ma.hariti.asmaa.wrm.citrontrack.service.HarvestService;
+import ma.hariti.asmaa.wrm.citrontrack.service.harvest.HarvestService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
