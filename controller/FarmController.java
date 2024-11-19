@@ -3,7 +3,9 @@ package ma.hariti.asmaa.wrm.citrontrack.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
+import ma.hariti.asmaa.wrm.citrontrack.dto.ApiResponseDTO;
 import ma.hariti.asmaa.wrm.citrontrack.dto.farm.FarmDTO;
+import ma.hariti.asmaa.wrm.citrontrack.dto.farm.FarmResponseDTO;
 import ma.hariti.asmaa.wrm.citrontrack.service.farm.FarmService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -54,12 +56,14 @@ public class FarmController {
     @Operation(summary = "Get a farm by ID", description = "Returns a farm by its ID")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved the farm")
     @ApiResponse(responseCode = "404", description = "Farm not found")
-    public ResponseEntity<FarmDTO> getFarmById(@PathVariable Long id) {
+    public ResponseEntity<ApiResponseDTO<FarmDTO>> getFarmById(@PathVariable Long id) {
         log.debug("REST request to get Farm : {}", id);
         return farmService.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .map(farmDTO -> ResponseEntity.ok(ApiResponseDTO.success(farmDTO)))
+                .orElse(ResponseEntity.status(404).body(ApiResponseDTO.error("Farm not found", 404)));
     }
+
+
 
     @GetMapping
     @Operation(summary = "Get all farms", description = "Returns a list of all farms")

@@ -7,8 +7,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.*;
+import ma.hariti.asmaa.wrm.citrontrack.dto.field.FieldDTO;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -29,5 +31,6 @@ public class FarmDTO {
 
     @PastOrPresent(message = "Creation date must be in the past or present")
     private LocalDate creationDate;
+    private List<FieldDTO> fields;
 }
 
