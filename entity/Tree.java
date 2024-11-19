@@ -32,7 +32,8 @@ public class Tree {
     private Field field;
 
     @Transient
-    private TreeProductivity productivity;
+    private
+    TreeProductivity productivity;
 
     @OneToMany(mappedBy = "tree", fetch = FetchType.LAZY)
     private List<HarvestDetail> harvestDetails;

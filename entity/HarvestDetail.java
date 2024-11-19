@@ -28,7 +28,7 @@ public class HarvestDetail extends BaseEntity {
     private Tree tree;
 
     @ManyToOne
-    @MapsId("harvestId")  // Maps to the harvestId field in HarvestDetailId
+    @MapsId("harvestId")
     @JoinColumn(name = "harvest_id", nullable = false)
     @NotNull(message = "Harvest must not be null")
     private Harvest harvest;
