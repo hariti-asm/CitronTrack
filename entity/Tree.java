@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.*;
 import ma.hariti.asmaa.wrm.citrontrack.enums.TreeProductivity;
+import ma.hariti.asmaa.wrm.citrontrack.validation.ValidPlantingDate;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -25,6 +26,7 @@ public class Tree {
 
     @NotNull(message = "Plantation date cannot be null")
     @PastOrPresent(message = "Planting date must be in the past or present")
+    @ValidPlantingDate
     private LocalDate platingDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
