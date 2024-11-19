@@ -121,5 +121,31 @@ public class HarvestController {
         return ResponseEntity.ok(harvestService.count());
     }
 
+    @PostMapping("/batch")
+    @Operation(summary = "Create multiple harvests", description = "Creates multiple harvest records at once")
+    @ApiResponse(responseCode = "201", description = "Harvests created successfully")
+    public ResponseEntity<List<HarvestDTO>> createHarvests(
+            @Valid @RequestBody List<HarvestRequestDTO> requestDTOs) {
+        log.debug("REST request to save Harvests : {}", requestDTOs);
 
+        List<HarvestDTO> harvestDTOs = requestDTOs.stream()
+                .map(req -> HarvestDTO.builder()
+                        .harvestDate(req.getHarvestDate())
+                        .season(req.getSeason())
+                        .build())
+                .toList();
+
+        List<HarvestDTO> result = harvestService.createAll(harvestDTOs);
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
+    }
+
+    @DeleteMapping("/batch")
+    @Operation(summary = "Delete multiple harvests", description = "Deletes multiple harvests by their IDs")
+    @ApiResponse(responseCode = "204", description = "Harvests deleted successfully")
+    public ResponseEntity<Void> deleteHarvests(@RequestBody List<Long> ids) {
+        log.debug("REST request to delete Harvests : {}", ids);
+        List<HarvestDTO> harvestsToDelete = harvestService.findAllById(ids);
+        harvestService.deleteAll(harvestsToDelete);
+        return ResponseEntity.noContent().build();
+    }
 }
