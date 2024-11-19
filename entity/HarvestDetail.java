@@ -19,7 +19,7 @@ public class HarvestDetail extends BaseEntity {
     private HarvestDetailId id;
 
     @NotNull(message = "Quantity cannot be null")
-    @Positive(message = "Quantity must be greater than 0")
+    @Positive(message = "Quantity  harvested by tree must be greater than 0")
     private Double quantity;
 
     @ManyToOne

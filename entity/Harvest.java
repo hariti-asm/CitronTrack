@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.*;
 import ma.hariti.asmaa.wrm.citrontrack.enums.Season;
+import ma.hariti.asmaa.wrm.citrontrack.util.BaseEntity;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "Harvests")
-public class Harvest {
+public class Harvest extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
