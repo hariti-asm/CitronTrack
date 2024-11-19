@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import ma.hariti.asmaa.wrm.citrontrack.dto.ApiResponseDTO;
 import ma.hariti.asmaa.wrm.citrontrack.dto.farm.FarmDTO;
+import ma.hariti.asmaa.wrm.citrontrack.dto.farm.FarmRequestDTO;
 import ma.hariti.asmaa.wrm.citrontrack.dto.farm.FarmResponseDTO;
 import ma.hariti.asmaa.wrm.citrontrack.service.farm.FarmService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +27,9 @@ public class FarmController {
     @PostMapping
     @Operation(summary = "Create a new farm", description = "Creates and returns the newly created farm")
     @ApiResponse(responseCode = "200", description = "Farm successfully created")
-    public ResponseEntity<FarmDTO> createFarm(@RequestBody FarmDTO farmDTO) {
-        log.debug("REST request to create Farm : {}", farmDTO);
-        FarmDTO createdFarm = farmService.create(farmDTO);
+    public ResponseEntity<FarmDTO> createFarm(@RequestBody FarmRequestDTO farmRequestDTO) {
+        log.debug("REST request to create Farm : {}", farmRequestDTO);
+        FarmDTO createdFarm = farmService.createFromRequest(farmRequestDTO);
         return ResponseEntity.ok(createdFarm);
     }
 

@@ -2,6 +2,7 @@ package ma.hariti.asmaa.wrm.citrontrack.service.farm;
 
 import lombok.extern.slf4j.Slf4j;
 import ma.hariti.asmaa.wrm.citrontrack.dto.farm.FarmDTO;
+import ma.hariti.asmaa.wrm.citrontrack.dto.farm.FarmRequestDTO;
 import ma.hariti.asmaa.wrm.citrontrack.entity.Farm;
 import ma.hariti.asmaa.wrm.citrontrack.mapper.FarmMapper;
 import ma.hariti.asmaa.wrm.citrontrack.repository.FarmRepository;
@@ -14,10 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class FarmServiceImpl extends GenericDtoServiceImpl<FarmDTO, Farm, Long> implements FarmService {
 
+    private final FarmRepository farmRepository;
     private final FarmMapper farmMapper;
 
-    public FarmServiceImpl(FarmRepository repository, FarmMapper farmMapper) {
-        super(repository);
+    public FarmServiceImpl(FarmRepository farmRepository, FarmMapper farmMapper) {
+        super(farmRepository);
+        this.farmRepository = farmRepository;
         this.farmMapper = farmMapper;
     }
 
@@ -34,5 +37,12 @@ public class FarmServiceImpl extends GenericDtoServiceImpl<FarmDTO, Farm, Long> 
     @Override
     protected void updateEntity(Farm entity, FarmDTO dto) {
         farmMapper.updateEntityFromDto(dto, entity);
+    }
+
+    public FarmDTO createFromRequest(FarmRequestDTO requestDTO) {
+        log.debug("Creating Farm from FarmRequestDTO: {}", requestDTO);
+        Farm entity = farmMapper.toEntity(requestDTO);
+        Farm savedEntity = farmRepository.save(entity);
+        return farmMapper.toDto(savedEntity);
     }
 }

@@ -1,6 +1,7 @@
 package ma.hariti.asmaa.wrm.citrontrack.mapper;
 
 import ma.hariti.asmaa.wrm.citrontrack.dto.farm.FarmDTO;
+import ma.hariti.asmaa.wrm.citrontrack.dto.farm.FarmRequestDTO;
 import ma.hariti.asmaa.wrm.citrontrack.dto.field.FieldDTO;
 import ma.hariti.asmaa.wrm.citrontrack.entity.Farm;
 import ma.hariti.asmaa.wrm.citrontrack.entity.Field;
@@ -15,10 +16,13 @@ public interface FarmMapper {
     @Mapping(target = "id", ignore = true)
     Farm toEntity(FarmDTO farmDTO);
 
+    @Mapping(target = "id", ignore = true)
+    Farm toEntity(FarmRequestDTO farmRequestDTO);
+
     FarmDTO toDto(Farm farm);
 
     @Mapping(target = "id", ignore = true)
     void updateEntityFromDto(FarmDTO farmDTO, @MappingTarget Farm farm);
-    List<FieldDTO> mapFields(List<Field> fields);
 
+    List<FieldDTO> mapFields(List<Field> fields);
 }

@@ -4,27 +4,44 @@ import ma.hariti.asmaa.wrm.citrontrack.dto.field.FieldDTO;
 import ma.hariti.asmaa.wrm.citrontrack.dto.field.FieldRequestDTO;
 import ma.hariti.asmaa.wrm.citrontrack.dto.field.FieldResponseDTO;
 import ma.hariti.asmaa.wrm.citrontrack.entity.Field;
+import ma.hariti.asmaa.wrm.citrontrack.entity.Farm;
+import ma.hariti.asmaa.wrm.citrontrack.repository.FarmRepository;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public interface FieldMapper {
+public abstract class FieldMapper {
 
-    FieldDTO toDto(Field entity);
-
-    Field toEntity(FieldDTO dto);
-
-    FieldResponseDTO toResponseDto(Field entity);
+    @Autowired
+    private FarmRepository farmRepository;
 
     @Mapping(target = "id", ignore = true)
-    void updateEntityFromDto(FieldDTO dto, @MappingTarget Field entity);
+    @Mapping(target = "farm", expression = "java(getFarmById(dto.getFarmId()))")
+    @Mapping(target = "trees", ignore = true)
+    public abstract Field toEntity(FieldRequestDTO dto);
 
-    List<FieldDTO> toDtoList(List<Field> fields);
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "area", source = "area")
+    @Mapping(target = "farm", source = "farm")
+    @Mapping(target = "trees", source = "trees")
+    public abstract FieldResponseDTO toResponseDto(Field entity);
 
-    List<FieldResponseDTO> toResponseDtoList(List<Field> fields);
+    @Mapping(target = "area", source = "area")
+    public abstract FieldDTO toDto(Field entity);
 
-    FieldDTO toDtoFromRequest(FieldRequestDTO requestDTO);
+    @Mapping(target = "id", ignore = true)
+    public abstract void updateEntityFromDto(FieldDTO dto, @MappingTarget Field entity);
+
+    public abstract List<FieldDTO> toDtoList(List<Field> fields);
+
+    public abstract List<FieldResponseDTO> toResponseDtoList(List<Field> fields);
+
+    protected Farm getFarmById(Long farmId) {
+        return farmRepository.findById(farmId)
+                .orElseThrow(() -> new IllegalArgumentException("Farm not found with ID: " + farmId));
+    }
 }

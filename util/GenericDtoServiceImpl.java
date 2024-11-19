@@ -1,6 +1,8 @@
 package ma.hariti.asmaa.wrm.citrontrack.util;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
+import ma.hariti.asmaa.wrm.citrontrack.dto.field.FieldRequestDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -41,7 +43,6 @@ public abstract class GenericDtoServiceImpl<D, T extends BaseEntity, ID> impleme
         T entity = toEntity(dto);
         return toDto(repository.save(entity));
     }
-
     @Override
     @Transactional
     public List<D> createAll(List<D> dtos) {
