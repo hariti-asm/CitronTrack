@@ -7,6 +7,7 @@ import ma.hariti.asmaa.wrm.citrontrack.entity.Tree;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+
 @Mapper(componentModel = "spring")
 public interface TreeMapper {
 
@@ -20,6 +21,7 @@ public interface TreeMapper {
     Tree toEntity(TreeDTO treeDTO);
 
     @Mapping(source = "fieldId", target = "field.id")
+    @Mapping(source = "plantingDate", target = "plantingDate")
     Tree toEntityFromRequest(TreeRequestDTO treeRequestDTO);
 
     void updateEntityFromDto(TreeDTO treeDTO, @MappingTarget Tree tree);

@@ -27,7 +27,8 @@ public class Tree {
     @NotNull(message = "Plantation date cannot be null")
     @PastOrPresent(message = "Planting date must be in the past or present")
     @ValidPlantingDate
-    private LocalDate platingDate;
+    @Column(name ="planting_date")
+    private LocalDate plantingDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "field_id")

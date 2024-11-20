@@ -61,7 +61,6 @@ public class TreeServiceImpl extends GenericDtoServiceImpl<TreeDTO, Tree, Long> 
         Tree savedEntity = treeRepository.save(entity);
         return treeMapper.toResponseDto(savedEntity);
     }
-
     @Override
     public Optional<TreeResponseDTO> findByIdWithResponse(Long id) {
         return treeRepository.findById(id)
