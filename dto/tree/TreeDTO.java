@@ -17,4 +17,5 @@ public class TreeDTO {
     private Long id;
     private LocalDate plantingDate;
     private TreeProductivity productivity;
+    private Long fieldId;
 }

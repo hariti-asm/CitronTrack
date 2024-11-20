@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ma.hariti.asmaa.wrm.citrontrack.dto.field.FieldDTO;
 import ma.hariti.asmaa.wrm.citrontrack.enums.TreeProductivity;
+import ma.hariti.asmaa.wrm.citrontrack.validation.ValidFieldArea;
+import ma.hariti.asmaa.wrm.citrontrack.validation.ValidPlantingDate;
 
 import java.time.LocalDate;
 
@@ -15,6 +17,8 @@ import java.time.LocalDate;
 public class TreeResponseDTO {
 
     private Long id;
+    @ValidPlantingDate
+
     private LocalDate plantingDate;
     private FieldDTO field;
     private TreeProductivity productivity;
