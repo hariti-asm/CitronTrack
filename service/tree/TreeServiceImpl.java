@@ -72,9 +72,16 @@ public class TreeServiceImpl extends GenericDtoServiceImpl<TreeDTO, Tree, Long> 
 
     @Override
     public Optional<TreeResponseDTO> findByIdWithResponse(Long id) {
-        return treeRepository.findById(id)
-                .map(treeMapper::toResponseDto);
+        return treeRepository.findById(id).map(tree -> {
+            LocalDate currentDate = LocalDate.now();
+            int treeAge = Period.between(tree.getPlantingDate(), currentDate).getYears();
+
+            tree.setProductivity(TreeProductivity.fromAge(treeAge));
+
+            return treeMapper.toResponseDto(tree);
+        });
     }
+
 
     public Page<TreeResponseDTO> findAllWithResponse(Pageable pageable) {
         Page<Tree> treesPage = treeRepository.findAll(pageable);
