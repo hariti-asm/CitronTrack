@@ -1,9 +1,11 @@
 package ma.hariti.asmaa.wrm.citrontrack.service.tree;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import ma.hariti.asmaa.wrm.citrontrack.dto.tree.TreeDTO;
 import ma.hariti.asmaa.wrm.citrontrack.dto.tree.TreeRequestDTO;
 import ma.hariti.asmaa.wrm.citrontrack.dto.tree.TreeResponseDTO;
+import ma.hariti.asmaa.wrm.citrontrack.entity.Field;
 import ma.hariti.asmaa.wrm.citrontrack.entity.Tree;
 import ma.hariti.asmaa.wrm.citrontrack.enums.TreeProductivity;
 import ma.hariti.asmaa.wrm.citrontrack.mapper.TreeMapper;
@@ -89,4 +91,33 @@ public class TreeServiceImpl extends GenericDtoServiceImpl<TreeDTO, Tree, Long> 
         return treesPage.map(treeMapper::toResponseDto);
     }
 
+    @Transactional
+    public TreeResponseDTO updateFromRequest(Long id, TreeRequestDTO requestDTO) {
+        Tree existingTree = treeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Tree not found with id: " + id));
+
+        Field field = fieldRepository.findById(requestDTO.getFieldId())
+                .orElseThrow(() -> new EntityNotFoundException("Field not found with id: " + requestDTO.getFieldId()));
+
+        if (requestDTO.getPlantingDate().isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("Planting date cannot be in the future.");
+        }
+
+        TreeDTO treeDTO = TreeDTO.builder()
+                .id(id)
+                .plantingDate(requestDTO.getPlantingDate())
+                .fieldId(requestDTO.getFieldId())
+                .build();
+
+        treeMapper.updateEntityFromDto(treeDTO, existingTree);
+
+        existingTree.setField(field);
+
+        int treeAge = Period.between(requestDTO.getPlantingDate(), LocalDate.now()).getYears();
+        existingTree.setProductivity(TreeProductivity.fromAge(treeAge));
+
+        // Save and return
+        Tree updatedTree = treeRepository.save(existingTree);
+        return treeMapper.toResponseDto(updatedTree);
+    }
 }

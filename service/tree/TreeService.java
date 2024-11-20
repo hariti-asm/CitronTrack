@@ -12,6 +12,8 @@ import java.util.Optional;
 public interface TreeService extends GenericDtoService<TreeDTO, Long> {
     TreeResponseDTO createFromRequest(TreeRequestDTO requestDTO);
 
+    TreeResponseDTO updateFromRequest(Long id, TreeRequestDTO treeRequestDTO);
+
     Page<TreeResponseDTO> findAllWithResponse(Pageable pageable);
     Optional<TreeResponseDTO> findByIdWithResponse(Long id);
 }

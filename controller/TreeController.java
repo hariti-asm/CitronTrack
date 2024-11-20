@@ -1,7 +1,6 @@
 package ma.hariti.asmaa.wrm.citrontrack.controller;
 
 import jakarta.validation.Valid;
-import ma.hariti.asmaa.wrm.citrontrack.dto.tree.TreeDTO;
 import ma.hariti.asmaa.wrm.citrontrack.dto.tree.TreeRequestDTO;
 import ma.hariti.asmaa.wrm.citrontrack.dto.tree.TreeResponseDTO;
 import ma.hariti.asmaa.wrm.citrontrack.service.tree.TreeService;
@@ -47,12 +46,11 @@ public class TreeController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TreeDTO> updateTree(
+    public ResponseEntity<TreeResponseDTO> updateTree(
             @PathVariable Long id,
-            @Valid @RequestBody TreeDTO treeRequestDTO) {
-        TreeDTO updatedTree = treeService.update(id, treeRequestDTO);
+            @Valid @RequestBody TreeRequestDTO treeRequestDTO) {
+        TreeResponseDTO updatedTree = treeService.updateFromRequest(id, treeRequestDTO);
         return ResponseEntity.ok(updatedTree);
-
     }
 
     @DeleteMapping("/{id}")
