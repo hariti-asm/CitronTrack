@@ -4,20 +4,21 @@ package ma.hariti.asmaa.wrm.citrontrack.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
-import ma.hariti.asmaa.wrm.citrontrack.util.BaseEntity;
+import lombok.*;
+import ma.hariti.asmaa.wrm.citrontrack.validation.ValidFieldArea;
 import org.springframework.lang.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Entity
+@ValidFieldArea
 @Table(name = "Fields")
-public class Field extends BaseEntity {
+public class Field {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

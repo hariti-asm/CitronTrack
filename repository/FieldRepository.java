@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FieldRepository  extends JpaRepository<Field, Long> {
+    long countByFarmId(Long farmId);
+
 }

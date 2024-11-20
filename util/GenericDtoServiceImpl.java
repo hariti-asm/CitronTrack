@@ -1,8 +1,6 @@
 package ma.hariti.asmaa.wrm.citrontrack.util;
 
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.Valid;
-import ma.hariti.asmaa.wrm.citrontrack.dto.field.FieldRequestDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -16,7 +14,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Transactional
-public abstract class GenericDtoServiceImpl<D, T extends BaseEntity, ID> implements GenericDtoService<D, ID> {
+public abstract class GenericDtoServiceImpl<D, T, ID> implements GenericDtoService<D, ID> {
     private static final Logger log = LoggerFactory.getLogger(GenericDtoServiceImpl.class);
 
     protected final JpaRepository<T, ID> repository;
@@ -31,7 +29,6 @@ public abstract class GenericDtoServiceImpl<D, T extends BaseEntity, ID> impleme
         this.entityClass = (Class<T>) genericSuperclass.getActualTypeArguments()[1];
     }
 
-    // Abstract methods for DTO-Entity conversion
     protected abstract D toDto(T entity);
     protected abstract T toEntity(D dto);
     protected abstract void updateEntity(T entity, D dto);
@@ -43,6 +40,7 @@ public abstract class GenericDtoServiceImpl<D, T extends BaseEntity, ID> impleme
         T entity = toEntity(dto);
         return toDto(repository.save(entity));
     }
+
     @Override
     @Transactional
     public List<D> createAll(List<D> dtos) {

@@ -3,9 +3,11 @@ package ma.hariti.asmaa.wrm.citrontrack.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import ma.hariti.asmaa.wrm.citrontrack.util.BaseEntity;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,7 +20,10 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "Farms")
-public class Farm  extends BaseEntity {
+public class Farm {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @NotBlank(message = "name is required")
     private String name;

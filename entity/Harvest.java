@@ -3,13 +3,15 @@ package ma.hariti.asmaa.wrm.citrontrack.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import ma.hariti.asmaa.wrm.citrontrack.enums.Season;
-import ma.hariti.asmaa.wrm.citrontrack.util.BaseEntity;
 
 import java.time.LocalDate;
 import java.util.List;
-import lombok.experimental.SuperBuilder;
 
 @SuperBuilder
 @NoArgsConstructor
@@ -18,7 +20,11 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @Entity
 @Table(name = "Harvests")
-public class Harvest extends BaseEntity{
+public class Harvest {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @NotNull(message = "Harvest date cannot be null")
     @PastOrPresent(message = "Harvest date must be in the past or present")
     private LocalDate harvestDate;
@@ -32,4 +38,6 @@ public class Harvest extends BaseEntity{
 
     @OneToMany(mappedBy = "harvest", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<HarvestDetail> harvestDetails;
+
+
 }
