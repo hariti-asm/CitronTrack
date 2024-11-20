@@ -5,6 +5,7 @@ import ma.hariti.asmaa.wrm.citrontrack.dto.tree.TreeDTO;
 import ma.hariti.asmaa.wrm.citrontrack.dto.tree.TreeRequestDTO;
 import ma.hariti.asmaa.wrm.citrontrack.dto.tree.TreeResponseDTO;
 import ma.hariti.asmaa.wrm.citrontrack.entity.Tree;
+import ma.hariti.asmaa.wrm.citrontrack.enums.TreeProductivity;
 import ma.hariti.asmaa.wrm.citrontrack.mapper.TreeMapper;
 import ma.hariti.asmaa.wrm.citrontrack.repository.FieldRepository;
 import ma.hariti.asmaa.wrm.citrontrack.repository.TreeRepository;
@@ -15,6 +16,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Optional;
 
 @Service
@@ -57,10 +60,16 @@ public class TreeServiceImpl extends GenericDtoServiceImpl<TreeDTO, Tree, Long> 
                 .orElseThrow(() -> new EntityNotFoundException("Field not found with id: " + requestDTO.getFieldId()));
 
         Tree entity = treeMapper.toEntityFromRequest(requestDTO);
+        entity.setField(field);
+
+        LocalDate currentDate = LocalDate.now();
+        int treeAge = Period.between(requestDTO.getPlantingDate(), currentDate).getYears();
+        entity.setProductivity(TreeProductivity.fromAge(treeAge));
 
         Tree savedEntity = treeRepository.save(entity);
         return treeMapper.toResponseDto(savedEntity);
     }
+
     @Override
     public Optional<TreeResponseDTO> findByIdWithResponse(Long id) {
         return treeRepository.findById(id)
