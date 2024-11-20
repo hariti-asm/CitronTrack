@@ -14,11 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class TreeServiceImpl extends GenericDtoServiceImpl<TreeDTO, Tree, Long> implements TreeService {
@@ -71,16 +68,10 @@ public class TreeServiceImpl extends GenericDtoServiceImpl<TreeDTO, Tree, Long> 
                 .map(treeMapper::toResponseDto);
     }
 
-    @Transactional
     public Page<TreeResponseDTO> findAllWithResponse(Pageable pageable) {
-        return treeRepository.findAll(pageable)
-                .map(treeMapper::toResponseDto);
+        Page<Tree> treesPage = treeRepository.findAll(pageable);
+
+        return treesPage.map(treeMapper::toResponseDto);
     }
 
-    @Transactional
-    public List<TreeResponseDTO> findAllWithResponse() {
-        return treeRepository.findAll().stream()
-                .map(treeMapper::toResponseDto)
-                .collect(Collectors.toList());
-    }
 }
