@@ -17,6 +17,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SaleDTO {
+
     private Long id;
 
     @NotNull(message = "Unit price cannot be null")
@@ -36,4 +37,6 @@ public class SaleDTO {
 
     @NotNull(message = "Harvest cannot be null")
     private HarvestDTO harvest;
+    private double revenue;
+
 }

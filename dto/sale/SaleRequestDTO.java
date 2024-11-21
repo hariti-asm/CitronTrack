@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ma.hariti.asmaa.wrm.citrontrack.dto.customer.CustomerDTO;
 
 import java.time.LocalDate;
 
@@ -27,7 +26,7 @@ public class SaleRequestDTO {
     @PastOrPresent(message = "Date sold must be in the past or present")
     private LocalDate dateSold;
 
-    private CustomerDTO customer;
+    private Long customerId;
 
     @NotNull(message = "Harvest ID cannot be null")
     private Long harvestId;

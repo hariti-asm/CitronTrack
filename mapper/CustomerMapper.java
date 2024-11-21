@@ -7,7 +7,9 @@ import org.mapstruct.MappingConstants;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface CustomerMapper {
+
     CustomerDTO toDTO(Customer customer);
 
     Customer toEntity(CustomerDTO customerDTO);
+
 }

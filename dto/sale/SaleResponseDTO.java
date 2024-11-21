@@ -1,9 +1,12 @@
 package ma.hariti.asmaa.wrm.citrontrack.dto.sale;
 
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PastOrPresent;
-import lombok.*;
+import jakarta.validation.constraints.Positive;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import ma.hariti.asmaa.wrm.citrontrack.dto.customer.CustomerDTO;
 import ma.hariti.asmaa.wrm.citrontrack.dto.harvest.HarvestDTO;
 
@@ -34,4 +37,6 @@ public class SaleResponseDTO {
 
     @NotNull(message = "Harvest cannot be null")
     private HarvestDTO harvest;
+    private double revenue;
+
 }

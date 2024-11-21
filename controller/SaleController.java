@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import ma.hariti.asmaa.wrm.citrontrack.dto.sale.SaleDTO;
+import ma.hariti.asmaa.wrm.citrontrack.dto.sale.SaleRequestDTO;
+import ma.hariti.asmaa.wrm.citrontrack.dto.sale.SaleResponseDTO;
 import ma.hariti.asmaa.wrm.citrontrack.service.sale.SaleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,10 +32,11 @@ public class SaleController {
             @ApiResponse(responseCode = "201", description = "Sale created successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
-    public ResponseEntity<SaleDTO> createSale(@RequestBody SaleDTO saleDTO) {
-        SaleDTO createdSale = saleService.create(saleDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdSale);
+    public ResponseEntity<SaleResponseDTO> createSale(@RequestBody SaleRequestDTO requestDTO) {
+        SaleResponseDTO saleResponseDTO = saleService.createFromRequest(requestDTO);
+        return ResponseEntity.ok(saleResponseDTO);
     }
+
 
     @GetMapping("/{id}")
     @Operation(summary = "Get a sale by ID", description = "Fetches a sale using its ID.")

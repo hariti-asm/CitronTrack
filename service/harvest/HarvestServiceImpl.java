@@ -2,6 +2,8 @@ package ma.hariti.asmaa.wrm.citrontrack.service.harvest;
 
 import lombok.extern.slf4j.Slf4j;
 import ma.hariti.asmaa.wrm.citrontrack.dto.harvest.HarvestDTO;
+import ma.hariti.asmaa.wrm.citrontrack.dto.harvest.HarvestRequestDTO;
+import ma.hariti.asmaa.wrm.citrontrack.dto.harvest.HarvestResponseDTO;
 import ma.hariti.asmaa.wrm.citrontrack.entity.Harvest;
 import ma.hariti.asmaa.wrm.citrontrack.mapper.HarvestMapper;
 import ma.hariti.asmaa.wrm.citrontrack.repository.HarvestRepository;
@@ -12,18 +14,21 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @Transactional
-public class HarvestServiceImpl extends GenericDtoServiceImpl<HarvestDTO, Harvest, Long> implements HarvestService {
+public class HarvestServiceImpl extends GenericDtoServiceImpl<HarvestDTO, Harvest, Long>
+        implements HarvestService {
 
     private final HarvestMapper harvestMapper;
+    private final HarvestRepository harvestRepository;
 
-    public HarvestServiceImpl(HarvestRepository repository, HarvestMapper harvestMapper) {
-        super(repository);
+    public HarvestServiceImpl(HarvestRepository harvestRepository, HarvestMapper harvestMapper) {
+        super(harvestRepository);
         this.harvestMapper = harvestMapper;
+        this.harvestRepository = harvestRepository;
     }
 
     @Override
     protected HarvestDTO toDto(Harvest entity) {
-        return harvestMapper.toDto(entity);
+        return harvestMapper.toDTO(entity);
     }
 
     @Override
@@ -35,4 +40,16 @@ public class HarvestServiceImpl extends GenericDtoServiceImpl<HarvestDTO, Harves
     protected void updateEntity(Harvest entity, HarvestDTO dto) {
         harvestMapper.updateEntityFromDto(dto, entity);
     }
+
+    public HarvestResponseDTO createHarvest(HarvestRequestDTO requestDTO) {
+        Harvest harvest = harvestMapper.requestDtoToEntity(requestDTO);
+        Harvest savedHarvest = harvestRepository.save(harvest);
+        return harvestMapper.entityToResponseDto(savedHarvest);
+    }
+
+    private HarvestResponseDTO createHarvestResponseDto(Harvest harvest) {
+        return harvestMapper.entityToResponseDto(harvest);
+    }
+
+
 }

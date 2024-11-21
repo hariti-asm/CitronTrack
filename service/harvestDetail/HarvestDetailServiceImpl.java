@@ -59,28 +59,51 @@ public class HarvestDetailServiceImpl extends GenericDtoServiceImpl<HarvestDetai
     @Override
     @Transactional
     public HarvestDetailResponseDTO createFromRequest(HarvestDetailRequestDTO requestDTO) {
+        // Fetch the tree from the database
         Tree tree = treeRepository.findById(requestDTO.getTreeId())
                 .orElseThrow(() -> new EntityNotFoundException("Tree not found"));
 
+        // Fetch the harvest from the database
         Harvest harvest = harvestRepository.findById(requestDTO.getHarvestId())
                 .orElseThrow(() -> new EntityNotFoundException("Harvest not found"));
 
+        // Check if the tree has already been harvested in the same season
         boolean alreadyHarvested = harvestDetailRepository.existsByTreeAndHarvestSeason(tree, harvest.getSeason());
         if (alreadyHarvested) {
             throw new IllegalStateException("Tree cannot be harvested twice in the same season");
         }
 
+        // Calculate tree age and set its productivity
         LocalDate currentDate = LocalDate.now();
         int treeAge = Period.between(tree.getPlantingDate(), currentDate).getYears();
-
         tree.setProductivity(TreeProductivity.fromAge(treeAge));
 
+        // Convert the HarvestDetailRequestDTO to an entity
         HarvestDetail entity = harvestDetailMapper.toEntityFromRequest(requestDTO);
         entity.setTree(tree);
         entity.setHarvest(harvest);
 
+        // Save the new HarvestDetail entity
         HarvestDetail savedEntity = harvestDetailRepository.save(entity);
+
+        // Update the totalQuantity field in the Harvest entity
+        updateHarvestTotalQuantity(harvest);
+
+        // Flush the changes to make sure the updated harvest entity is persisted
+        harvestRepository.flush();  // Force the entity manager to persist the changes immediately
+
+        // Return the response DTO for the saved HarvestDetail
         return harvestDetailMapper.toResponseDto(savedEntity);
+    }
+
+    private void updateHarvestTotalQuantity(Harvest harvest) {
+        double totalQuantity = harvest.getHarvestDetails().stream()
+                .mapToDouble(HarvestDetail::getQuantity)
+                .sum();
+
+        harvest.setTotalQuantity(totalQuantity);
+
+        harvestRepository.save(harvest);
     }
 
     @Override

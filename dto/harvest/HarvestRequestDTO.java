@@ -1,10 +1,11 @@
 package ma.hariti.asmaa.wrm.citrontrack.dto.harvest;
+
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import jakarta.validation.constraints.NotNull;
 import ma.hariti.asmaa.wrm.citrontrack.enums.Season;
 
 import java.time.LocalDate;
@@ -20,4 +21,5 @@ public class HarvestRequestDTO {
 
     @NotNull(message = "Season is required")
     private Season season;
+
 }

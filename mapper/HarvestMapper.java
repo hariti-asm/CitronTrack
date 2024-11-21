@@ -1,30 +1,34 @@
 package ma.hariti.asmaa.wrm.citrontrack.mapper;
+
 import ma.hariti.asmaa.wrm.citrontrack.dto.harvest.HarvestDTO;
 import ma.hariti.asmaa.wrm.citrontrack.dto.harvest.HarvestRequestDTO;
+import ma.hariti.asmaa.wrm.citrontrack.dto.harvest.HarvestResponseDTO;
 import ma.hariti.asmaa.wrm.citrontrack.entity.Harvest;
-import org.mapstruct.*;
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface HarvestMapper {
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
+import org.mapstruct.MappingTarget;
 
-    @Mapping(target = "harvestDetails", ignore = true)
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+public interface HarvestMapper {
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "harvestDate", target = "harvestDate")
+    @Mapping(source = "season", target = "season")
+    @Mapping(source = "totalQuantity", target = "totalQuantity")
+    HarvestDTO toDTO(Harvest harvest);
+
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "harvestDate", target = "harvestDate")
+    @Mapping(source = "season", target = "season")
+    @Mapping(source = "totalQuantity", target = "totalQuantity")
     Harvest toEntity(HarvestDTO harvestDTO);
 
-    @Mapping(target = "totalQuantity", expression = "java(calculateTotalQuantity(harvest))")
-    HarvestDTO toDto(Harvest harvest);
+    // Update entity from DTO method
+    void updateEntityFromDto(HarvestDTO dto, @MappingTarget Harvest entity);
 
-    @Mapping(target = "harvestDetails", ignore = true)
-    @Mapping(target = "totalQuantity", ignore = true)
+    // Convert request DTO to entity
     Harvest requestDtoToEntity(HarvestRequestDTO requestDTO);
 
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateEntityFromDto(HarvestDTO harvestDTO, @MappingTarget Harvest harvest);
-
-    default double calculateTotalQuantity(Harvest harvest) {
-        if (harvest.getHarvestDetails() == null || harvest.getHarvestDetails().isEmpty()) {
-            return 0.0;
-        }
-        return harvest.getHarvestDetails().stream()
-                .mapToDouble(detail -> detail.getQuantity())
-                .sum();
-    }
+    // Convert entity to response DTO
+    HarvestResponseDTO entityToResponseDto(Harvest harvest);
 }

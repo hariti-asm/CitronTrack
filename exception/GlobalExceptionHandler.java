@@ -1,6 +1,5 @@
 package ma.hariti.asmaa.wrm.citrontrack.exception;
 
-
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import ma.hariti.asmaa.wrm.citrontrack.dto.ApiResponseDTO;
@@ -71,6 +70,15 @@ public class GlobalExceptionHandler {
                 .body(ApiResponseDTO.error(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
     }
 
+    @ExceptionHandler(InsufficientHarvestQuantityException.class)
+    public ResponseEntity<ApiResponseDTO<Void>> handleInsufficientHarvestQuantityException(
+            InsufficientHarvestQuantityException ex) {
+        log.error("Insufficient harvest quantity: {}", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponseDTO.error(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponseDTO<Void>> handleGenericException(Exception ex) {
         log.error("Unexpected error occurred", ex);
@@ -78,5 +86,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ApiResponseDTO.error(message, HttpStatus.INTERNAL_SERVER_ERROR.value()));
+    }
+
+    public static class InsufficientHarvestQuantityException extends RuntimeException {
+        public InsufficientHarvestQuantityException(String message) {
+            super(message);
+        }
     }
 }

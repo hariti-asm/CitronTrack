@@ -2,10 +2,16 @@ package ma.hariti.asmaa.wrm.citrontrack.service.sale;
 
 import jakarta.persistence.EntityNotFoundException;
 import ma.hariti.asmaa.wrm.citrontrack.dto.sale.SaleDTO;
+import ma.hariti.asmaa.wrm.citrontrack.dto.sale.SaleRequestDTO;
+import ma.hariti.asmaa.wrm.citrontrack.dto.sale.SaleResponseDTO;
+import ma.hariti.asmaa.wrm.citrontrack.entity.Customer;
 import ma.hariti.asmaa.wrm.citrontrack.entity.Harvest;
+import ma.hariti.asmaa.wrm.citrontrack.entity.HarvestDetail;
 import ma.hariti.asmaa.wrm.citrontrack.entity.Sale;
 import ma.hariti.asmaa.wrm.citrontrack.mapper.CustomerMapper;
+import ma.hariti.asmaa.wrm.citrontrack.mapper.HarvestMapper;
 import ma.hariti.asmaa.wrm.citrontrack.mapper.SaleMapper;
+import ma.hariti.asmaa.wrm.citrontrack.repository.CustomerRepository;
 import ma.hariti.asmaa.wrm.citrontrack.repository.HarvestRepository;
 import ma.hariti.asmaa.wrm.citrontrack.repository.SaleRepository;
 import ma.hariti.asmaa.wrm.citrontrack.util.GenericDtoServiceImpl;
@@ -14,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-
 @Service
 public class SaleServiceImpl extends GenericDtoServiceImpl<SaleDTO, Sale, Long> implements SaleService {
 
@@ -22,13 +27,19 @@ public class SaleServiceImpl extends GenericDtoServiceImpl<SaleDTO, Sale, Long> 
     private final HarvestRepository harvestRepository;
     private final SaleMapper saleMapper;
     private final CustomerMapper customerMapper;
+    private final CustomerRepository customerRepository;
+    private final HarvestMapper harvestMapper;
 
-    public SaleServiceImpl(SaleRepository saleRepository, HarvestRepository harvestRepository, SaleMapper saleMapper, CustomerMapper customerMapper) {
+    public SaleServiceImpl(SaleRepository saleRepository, HarvestRepository harvestRepository,
+                           SaleMapper saleMapper, CustomerMapper customerMapper,
+                           CustomerRepository customerRepository, HarvestMapper harvestMapper) {
         super(saleRepository);
         this.saleRepository = saleRepository;
         this.harvestRepository = harvestRepository;
         this.saleMapper = saleMapper;
         this.customerMapper = customerMapper;
+        this.customerRepository = customerRepository;
+        this.harvestMapper = harvestMapper;
     }
 
     @Override
@@ -58,24 +69,71 @@ public class SaleServiceImpl extends GenericDtoServiceImpl<SaleDTO, Sale, Long> 
         entity.setHarvest(harvest);
     }
 
-    @Override
+
     @Transactional
-    public SaleDTO create(SaleDTO dto) {
-        Harvest harvest = harvestRepository.findById(dto.getHarvest().getId())
+    public SaleResponseDTO createFromRequest(SaleRequestDTO requestDTO) {
+        Customer customer = customerRepository.findById(requestDTO.getCustomerId())
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
+
+        Harvest harvest = harvestRepository.findById(requestDTO.getHarvestId())
                 .orElseThrow(() -> new EntityNotFoundException("Harvest not found"));
 
-        if (harvest.getTotalQuantity() < dto.getQuantitySold()) {
-            throw new IllegalArgumentException("Insufficient harvest quantity for sale");
+        validateSufficientHarvestQuantity(requestDTO, harvest);
+
+        updateHarvestQuantity(harvest, requestDTO.getQuantitySold());
+
+        SaleDTO saleDTO = createSaleDTO(requestDTO, customer, harvest);
+
+        SaleDTO savedSale = super.create(saleDTO);
+        savedSale.setRevenue(saleDTO.getUnitPrice() * saleDTO.getQuantitySold());
+        return mapToResponseDTO(savedSale);
+    }
+
+    private SaleResponseDTO mapToResponseDTO(SaleDTO saleDTO) {
+        return SaleResponseDTO.builder()
+                .id(saleDTO.getId())
+                .unitPrice(saleDTO.getUnitPrice())
+                .quantitySold(saleDTO.getQuantitySold())
+                .revenue(saleDTO.getRevenue())
+                .dateSold(saleDTO.getDateSold())
+                .customer(saleDTO.getCustomer())
+                .harvest(saleDTO.getHarvest())
+                .build();
+    }
+
+    private void validateSufficientHarvestQuantity(SaleRequestDTO requestDTO, Harvest harvest) {
+        double totalHarvestQuantity = harvest.getHarvestDetails().stream()
+                .mapToDouble(HarvestDetail::getQuantity)
+                .sum();
+        if (requestDTO.getQuantitySold() > totalHarvestQuantity) {
+            throw new IllegalArgumentException("Insufficient harvest quantity");
         }
+    }
 
-        harvest.setTotalQuantity(harvest.getTotalQuantity() - dto.getQuantitySold());
+    private void updateHarvestQuantity(Harvest harvest, double quantitySold) {
+        double totalHarvestQuantity = harvest.getHarvestDetails().stream()
+                .mapToDouble(HarvestDetail::getQuantity)
+                .sum();
+        harvest.setTotalQuantity(totalHarvestQuantity - quantitySold);
         harvestRepository.save(harvest);
+    }
 
-        return super.create(dto);
+    private SaleDTO createSaleDTO(SaleRequestDTO requestDTO, Customer customer, Harvest harvest) {
+        double revenue = requestDTO.getUnitPrice() * requestDTO.getQuantitySold();
+
+        return SaleDTO.builder()
+                .unitPrice(requestDTO.getUnitPrice())
+                .quantitySold(requestDTO.getQuantitySold())
+                .dateSold(requestDTO.getDateSold())
+
+                .customer(customerMapper.toDTO(customer))
+                .harvest(harvestMapper.toDTO(harvest))
+                .revenue(revenue)
+                .build();
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public Optional<SaleDTO> findById(Long id) {
         return super.findById(id);
     }

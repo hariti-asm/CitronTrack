@@ -5,14 +5,14 @@ import ma.hariti.asmaa.wrm.citrontrack.entity.Sale;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
-
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
         uses = {CustomerMapper.class, HarvestMapper.class})
 public interface SaleMapper {
-
-    @Mapping(source = "harvest.id", target = "harvest.id")
+    @Mapping(source = "customer", target = "customer")
+    @Mapping(source = "harvest", target = "harvest")
     SaleDTO toDTO(Sale sale);
 
-    @Mapping(source = "harvest.id", target = "harvest.id")
+    @Mapping(source = "customer", target = "customer")
+    @Mapping(source = "harvest", target = "harvest")
     Sale toEntity(SaleDTO saleDTO);
 }

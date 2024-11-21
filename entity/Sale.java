@@ -1,6 +1,5 @@
 package ma.hariti.asmaa.wrm.citrontrack.entity;
 
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
@@ -9,13 +8,13 @@ import lombok.*;
 
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "sales")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@Entity
-@Table(name = "Sales")
 public class Sale {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,14 +30,13 @@ public class Sale {
     @PastOrPresent(message = "Date sold must be in the past or present")
     private LocalDate dateSold;
 
-    @Embedded
-
-    @AttributeOverride(name = "fullName", column = @Column(name = "customer_name"))
-    @AttributeOverride(name = "email", column = @Column(name = "customer_email"))
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "harvest_id")
     private Harvest harvest;
+    @Transient
+    private Double revenue;
 }

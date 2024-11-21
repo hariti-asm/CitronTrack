@@ -30,4 +30,9 @@ public class HarvestDTO {
 
     @Positive(message = "Total quantity must be greater than 0")
     private double totalQuantity;
+
+    public HarvestDTO(Long id, double totalQuantity) {
+        this.id = id;
+        this.totalQuantity = totalQuantity;
+    }
 }
