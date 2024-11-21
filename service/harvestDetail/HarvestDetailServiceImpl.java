@@ -8,12 +8,16 @@ import ma.hariti.asmaa.wrm.citrontrack.embeddedable.HarvestDetailId;
 import ma.hariti.asmaa.wrm.citrontrack.entity.Harvest;
 import ma.hariti.asmaa.wrm.citrontrack.entity.HarvestDetail;
 import ma.hariti.asmaa.wrm.citrontrack.entity.Tree;
+import ma.hariti.asmaa.wrm.citrontrack.enums.TreeProductivity;
 import ma.hariti.asmaa.wrm.citrontrack.mapper.HarvestDetailMapper;
 import ma.hariti.asmaa.wrm.citrontrack.repository.HarvestDetailRepository;
 import ma.hariti.asmaa.wrm.citrontrack.repository.HarvestRepository;
 import ma.hariti.asmaa.wrm.citrontrack.repository.TreeRepository;
 import ma.hariti.asmaa.wrm.citrontrack.util.GenericDtoServiceImpl;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.Period;
 
 @Service
 public class HarvestDetailServiceImpl extends GenericDtoServiceImpl<HarvestDetailRequestDTO, HarvestDetail, HarvestDetailId>
@@ -39,7 +43,6 @@ public class HarvestDetailServiceImpl extends GenericDtoServiceImpl<HarvestDetai
 
     @Override
     protected HarvestDetailRequestDTO toDto(HarvestDetail entity) {
-        // Since we're using ResponseDTO, you might need to adjust this
         return null;
     }
 
@@ -62,7 +65,16 @@ public class HarvestDetailServiceImpl extends GenericDtoServiceImpl<HarvestDetai
         Harvest harvest = harvestRepository.findById(requestDTO.getHarvestId())
                 .orElseThrow(() -> new EntityNotFoundException("Harvest not found"));
 
-        // Convert to entity
+        boolean alreadyHarvested = harvestDetailRepository.existsByTreeAndHarvestSeason(tree, harvest.getSeason());
+        if (alreadyHarvested) {
+            throw new IllegalStateException("Tree cannot be harvested twice in the same season");
+        }
+
+        LocalDate currentDate = LocalDate.now();
+        int treeAge = Period.between(tree.getPlantingDate(), currentDate).getYears();
+
+        tree.setProductivity(TreeProductivity.fromAge(treeAge));
+
         HarvestDetail entity = harvestDetailMapper.toEntityFromRequest(requestDTO);
         entity.setTree(tree);
         entity.setHarvest(harvest);
