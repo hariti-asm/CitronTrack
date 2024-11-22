@@ -1,14 +1,20 @@
 package ma.hariti.asmaa.wrm.citrontrack.service.farm;
 
 import lombok.extern.slf4j.Slf4j;
+import ma.hariti.asmaa.wrm.citrontrack.builder.FarmSpecificationBuilder;
 import ma.hariti.asmaa.wrm.citrontrack.dto.farm.FarmDTO;
 import ma.hariti.asmaa.wrm.citrontrack.dto.farm.FarmRequestDTO;
 import ma.hariti.asmaa.wrm.citrontrack.entity.Farm;
 import ma.hariti.asmaa.wrm.citrontrack.mapper.FarmMapper;
 import ma.hariti.asmaa.wrm.citrontrack.repository.FarmRepository;
 import ma.hariti.asmaa.wrm.citrontrack.util.GenericDtoServiceImpl;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -35,7 +41,7 @@ public class FarmServiceImpl extends GenericDtoServiceImpl<FarmDTO, Farm, Long> 
     }
 
     @Override
-    protected void updateEntity(Farm entity, FarmDTO dto) {
+    public void updateEntity(Farm entity, FarmDTO dto) {
         farmMapper.updateEntityFromDto(dto, entity);
     }
 
@@ -44,5 +50,12 @@ public class FarmServiceImpl extends GenericDtoServiceImpl<FarmDTO, Farm, Long> 
         Farm entity = farmMapper.toEntity(requestDTO);
         Farm savedEntity = farmRepository.save(entity);
         return farmMapper.toDto(savedEntity);
+    }
+    public List<FarmDTO> searchFarms(FarmSpecificationBuilder builder) {
+        Specification<Farm> spec = builder.build();
+        List<Farm> farms = farmRepository.findAll(spec);
+        return farms.stream()
+                .map(farmMapper::toDto)
+                .collect(Collectors.toList());
     }
 }

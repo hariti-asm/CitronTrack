@@ -37,7 +37,7 @@ public class HarvestServiceImpl extends GenericDtoServiceImpl<HarvestDTO, Harves
     }
 
     @Override
-    protected void updateEntity(Harvest entity, HarvestDTO dto) {
+    public void updateEntity(Harvest entity, HarvestDTO dto) {
         harvestMapper.updateEntityFromDto(dto, entity);
     }
 

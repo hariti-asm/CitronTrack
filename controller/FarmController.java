@@ -3,14 +3,19 @@ package ma.hariti.asmaa.wrm.citrontrack.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
+import ma.hariti.asmaa.wrm.citrontrack.builder.FarmSpecificationBuilder;
 import ma.hariti.asmaa.wrm.citrontrack.dto.ApiResponseDTO;
 import ma.hariti.asmaa.wrm.citrontrack.dto.farm.FarmDTO;
 import ma.hariti.asmaa.wrm.citrontrack.dto.farm.FarmRequestDTO;
 import ma.hariti.asmaa.wrm.citrontrack.dto.farm.FarmResponseDTO;
 import ma.hariti.asmaa.wrm.citrontrack.service.farm.FarmService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -72,5 +77,29 @@ public class FarmController {
     public ResponseEntity<Iterable<FarmDTO>> getAllFarms() {
         log.debug("REST request to get all Farms");
         return ResponseEntity.ok(farmService.findAll());
+    }
+    @GetMapping("/search")
+    @Operation(summary = "Search farms with dynamic criteria", description = "Search farms using flexible search parameters")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved matching farms")
+    public ResponseEntity<List<FarmDTO>> searchFarms(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) Double minArea,
+            @RequestParam(required = false) Double maxArea,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate createdAfter,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate createdBefore,
+            @RequestParam(required = false) Integer minFields
+    ) {
+        log.debug("REST request to search Farms with criteria");
+
+        FarmSpecificationBuilder specBuilder = new FarmSpecificationBuilder()
+                .name(name)
+                .location(location)
+                .minArea(minArea)
+                .maxArea(maxArea)
+                .withMinFields(minFields);
+
+        List<FarmDTO> farms = farmService.searchFarms(specBuilder);
+        return ResponseEntity.ok(farms);
     }
 }
