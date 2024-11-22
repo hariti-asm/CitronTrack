@@ -195,6 +195,4 @@ This modern farm management solution represents the future of citrus farming, wh
 
 - All endpoints support pagination where applicable using `page` and `size` parameters
 - Dates should be provided in ISO 8601 format (YYYY-MM-DD)
-- Authentication tokens should be included in the Authorization header
 - Response format is consistently JSON
-- Bulk operations are supported with `/bulk` suffix where applicable
